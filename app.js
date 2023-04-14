@@ -1,4 +1,65 @@
+const questions = 
+[
+    {
+        question:`What's the output?
+        <br />
+        function sayHi() {
+        <br />
+          console.log(name);
+        <br />
+          console.log(age);
+        <br />
+          var name = 'Lydia';
+        <br />
+          let age = 21;
+        <br />
+        }
+        <br />
+        <br />
+        sayHi();`,
+        option1:`Lydia and undefined`,
+        option2:`Lydia and ReferenceError`,
+        option3:`undefined and ReferenceError`,
+        option4:`ReferenceError and 21`,
+        correct:2
+    },
+    {
+        question:`What's the output?
+        for (var i = 0; i < 3; i++) {
+          setTimeout(() => console.log(i), 1);
+        }
+        
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => console.log(i), 1);
+        }`,
+        option1:`0 1 2 and 0 1 2`,
+        option2:`0 1 2 and 3 3 3`,
+        option3:`3 3 3 and 0 1 2`,
+        option4:`None of these`,
+        correct:2
+    },
+    {
+        question:`What's the output?
+        const shape = {
+          radius: 10,
+          diameter() {
+            return this.radius * 2;
+          },
+          perimeter: () => 2 * Math.PI * this.radius,
+        };
+        
+        console.log(shape.diameter());
+        console.log(shape.perimeter());`,
+        option1:`20 and 62.83185307179586`,
+        option2:`20 and NaN`,
+        option3:`20 and 63`,
+        option4:`NaN and 63`,
+        correct:1
+    }
+];
 const palletteContainer = document.querySelector(".pallette-container");
+const answerBtns = document.querySelectorAll(".answerBtn");
+// console.dir(answerBtns);
 generateQuestionPallette(100);
 function generateQuestionPallette(numberOfQuestions){
     for(i=1;i<=numberOfQuestions;i++){
@@ -9,25 +70,62 @@ function generateQuestionPallette(numberOfQuestions){
         palletteContainer.appendChild(btn);
     }
 }
-
 const questionButton = document.querySelectorAll(".btn");
-function removeActive(){
-    questionButton.forEach(btn=>{
-        btn.classList.remove("active");
+function removeClass(buttons,classname){
+    buttons.forEach(btn=>{
+        btn.classList.remove(classname);
     })
+}
+function showCurrentQuestion(object,questionNo){
+    try{
+        if(object===undefined){
+            throw new Error("exceeded maximum question No");
+        }
+        const currentQuestion = document.querySelector(".question");
+        currentQuestion.innerHTML = `Question - ${questionNo} - ${object.question}`;
+        const option1 = document.querySelector("#A-answer");
+        const option2 = document.querySelector("#B-answer");
+        const option3 = document.querySelector("#C-answer");
+        const option4 = document.querySelector("#D-answer");
+        option1.innerHTML = object.option1;
+        option2.innerHTML = object.option2;
+        option3.innerHTML = object.option3;
+        option4.innerHTML = object.option4;
+    }
+    catch(error){
+        console.log(error.message);
+    }
 }
 questionButton.forEach(btn=>{
     btn.addEventListener("click",(e)=>{
-        removeActive();
+        removeClass(questionButton,"active");
         const questionNumber = Number(e.currentTarget.innerHTML);
-        console.log(questionNumber);
         e.currentTarget.classList.add("active");
+        // console.log(questionNumber);
+        showCurrentQuestion(questions[questionNumber-1], questionNumber);
+        addEventListenerToAnswers(questions[questionNumber-1].correct);
+        removeClass(answerBtns,"correct");
+        removeClass(answerBtns,"wrong");
     })
 })
+function addEventListenerToAnswers(correctAnswerIndex){
+    answerBtns.forEach(answerBtn=>{
+        answerBtn.addEventListener("click",()=>{
+            showTheCandidatesResponse(correctAnswerIndex);
+        })
+    })
+}
+function showTheCandidatesResponse(correctAnswerIndex){
+    for(let i = 0; i<answerBtns.length; i++){
+        let answerBtn = answerBtns[i];
+        console.log(correctAnswerIndex);
+        if(i===correctAnswerIndex) answerBtn.classList.add("correct");
+        else answerBtn.classList.add("wrong");
+    }
+}
 function makeRandomNumber(lowest,highest){
     return Math.floor(Math.random()*highest) + lowest;
 }
-// console.log(makeRandomNumber(1,100));
 function makeRandomIndexArray(array){
     while(array.length<100){
         let number = makeRandomNumber(1,100);
@@ -37,9 +135,8 @@ function makeRandomIndexArray(array){
 }
 let indexArray = [];
 indexArray = makeRandomIndexArray(indexArray);
-console.log(indexArray);
 
-// indexArray.sort((a,b)=>(a-b));
+
 
 
 
