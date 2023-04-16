@@ -59,7 +59,7 @@ const questions =
 ];
 const palletteContainer = document.querySelector(".pallette-container");
 const answerBtns = document.querySelectorAll(".answerBtn");
-// console.dir(answerBtns);
+let currentQuestionSelected = 0;
 generateQuestionPallette(100);
 function generateQuestionPallette(numberOfQuestions){
     for(i=1;i<=numberOfQuestions;i++){
@@ -99,30 +99,28 @@ function showCurrentQuestion(object,questionNo){
 questionButton.forEach(btn=>{
     btn.addEventListener("click",(e)=>{
         removeClass(questionButton,"active");
-        const questionNumber = Number(e.currentTarget.innerHTML);
-        e.currentTarget.classList.add("active");
-        // console.log(questionNumber);
-        showCurrentQuestion(questions[questionNumber-1], questionNumber);
-        addEventListenerToAnswers(questions[questionNumber-1].correct);
         removeClass(answerBtns,"correct");
         removeClass(answerBtns,"wrong");
+        const questionNumber = Number(e.currentTarget.innerHTML);
+        currentQuestionSelected = questionNumber -1;
+        e.currentTarget.classList.add("active");
+        showCurrentQuestion(questions[questionNumber-1], questionNumber);
+        // addEventListenerToAnswers(questions[questionNumber-1].correct);
+        // removeClass(answerBtns,"correct");
+        // removeClass(answerBtns,"wrong");
     })
 })
-function addEventListenerToAnswers(correctAnswerIndex){
-    answerBtns.forEach(answerBtn=>{
-        answerBtn.addEventListener("click",()=>{
-            showTheCandidatesResponse(correctAnswerIndex);
-        })
+answerBtns.forEach((answerBtn,index)=>{
+    answerBtn.addEventListener("click",(e)=>{
+        let correctAnsIndex = questions[currentQuestionSelected].correct 
+        if(correctAnsIndex === index)
+            e.currentTarget.classList.add("correct");
+        else {
+            e.currentTarget.classList.add("wrong");
+            answerBtns[correctAnsIndex].classList.add("correct");
+        }
     })
-}
-function showTheCandidatesResponse(correctAnswerIndex){
-    for(let i = 0; i<answerBtns.length; i++){
-        let answerBtn = answerBtns[i];
-        console.log(correctAnswerIndex);
-        if(i===correctAnswerIndex) answerBtn.classList.add("correct");
-        else answerBtn.classList.add("wrong");
-    }
-}
+})
 function makeRandomNumber(lowest,highest){
     return Math.floor(Math.random()*highest) + lowest;
 }

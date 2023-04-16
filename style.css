@@ -101,16 +101,15 @@ nav{
 }
 .answerBtn{
     /* background-color: hsl(58, 82%, 50%); */
-    background-color: hsla(244, 76%, 20%, 0.7);
-    color:white;
+    background-color: hsla(0, 0%, 100%, 0.87);
+    color:blue;
     font-family: 'Raleway', sans-serif;
     font-size:16px;
     border-radius:10px;
     border:none;
 }
 .answerBtn:hover{
-    background-color: hsl(24 4, 77%, 30%);
-    color:white;
+    background-color: hsla(0, 0%, 85%, 0.87);
 }
 .option{
     background-color: hsl(244, 77%, 20%);
@@ -135,4 +134,39 @@ nav{
     background-color: hsl(120, 100%, 35%);
     color:white;
 }
-
+nav{
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size:1.75rem;
+    width:100dvw;
+}
+.logo{
+    width:50dvw;
+    border:1px solid blue;
+}
+.scoreContainer{
+    width:15dvw;
+    height:50%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border:1px solid white;
+}
+.timer{
+    width:25dvw;
+    height:50%;
+    position: relative;
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    border:1px solid green;
+}
+.progressIndicator{
+    --progressWidth:25;
+    width:calc(var(--progressWidth)*1dvw);
+    position:absolute;
+    left:0;
+    background-color: hsla(120, 100%, 25%, 0.4);
+    height:100%;
+}
