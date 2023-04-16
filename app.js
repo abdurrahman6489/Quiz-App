@@ -57,9 +57,27 @@ const questions =
         correct:1
     }
 ];
+let submittedAnswers = [];
 const palletteContainer = document.querySelector(".pallette-container");
 const answerBtns = document.querySelectorAll(".answerBtn");
+const showQuestionPalette = document.getElementById("showQuestionPalette");
+
+let scoreElement = document.getElementById("score");
+let questionPalletteHidden = true;
+showQuestionPalette.addEventListener("click",(e)=>{
+    if(questionPalletteHidden){
+        palletteContainer.classList.remove("hide");
+        questionPalletteHidden = false;
+        e.currentTarget.innerHTML = "Hide Question Pallette";
+    }
+    else if(!questionPalletteHidden){
+        palletteContainer.classList.add("hide");
+        questionPalletteHidden = true;
+        e.currentTarget.innerHTML = "Show Question Pallette";
+    }
+})
 let currentQuestionSelected = 0;
+let score = 0;
 generateQuestionPallette(100);
 function generateQuestionPallette(numberOfQuestions){
     for(i=1;i<=numberOfQuestions;i++){
@@ -105,20 +123,22 @@ questionButton.forEach(btn=>{
         currentQuestionSelected = questionNumber -1;
         e.currentTarget.classList.add("active");
         showCurrentQuestion(questions[questionNumber-1], questionNumber);
-        // addEventListenerToAnswers(questions[questionNumber-1].correct);
-        // removeClass(answerBtns,"correct");
-        // removeClass(answerBtns,"wrong");
     })
 })
 answerBtns.forEach((answerBtn,index)=>{
     answerBtn.addEventListener("click",(e)=>{
         let correctAnsIndex = questions[currentQuestionSelected].correct 
-        if(correctAnsIndex === index)
+        if(correctAnsIndex === index && !submittedAnswers.includes(currentQuestionSelected)){
             e.currentTarget.classList.add("correct");
-        else {
+            scoreElement.innerHTML = parseInt(scoreElement.innerHTML) + 1;
+            score++;
+            console.log(score);
+        }
+        else if(!submittedAnswers.includes(currentQuestionSelected)){
             e.currentTarget.classList.add("wrong");
             answerBtns[correctAnsIndex].classList.add("correct");
         }
+        submittedAnswers.push(currentQuestionSelected);
     })
 })
 function makeRandomNumber(lowest,highest){

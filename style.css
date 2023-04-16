@@ -6,6 +6,7 @@
     background-color: hsl(0, 0%, 10%);
     /* color: hsl(0, 0%, 10%); */
     color: hsl(58, 82%, 56%);
+    font-family: 'Raleway', sans-serif;
 }
 body{
     height:100dvh;
@@ -40,7 +41,8 @@ nav{
     display:grid;
     gap:5%;
     grid-template:auto/1fr 1fr 1fr 1fr 1fr 1fr;
-    overflow-y: auto;
+    overflow: auto;
+    transition: 200ms ease-in-out;
     /* background-color: hsl(0, 10%, 20%); */
     /* background-color: hsl(0, 0%, 20%); */
     padding:10px;
@@ -143,7 +145,7 @@ nav{
 }
 .logo{
     width:50dvw;
-    border:1px solid blue;
+    /* border:1px solid blue; */
 }
 .scoreContainer{
     width:15dvw;
@@ -151,7 +153,7 @@ nav{
     display:flex;
     justify-content: center;
     align-items: center;
-    border:1px solid white;
+    /* border:1px solid white; */
 }
 .timer{
     width:25dvw;
@@ -160,7 +162,7 @@ nav{
     display:flex;
     justify-content: flex-end;
     align-items: center;
-    border:1px solid green;
+    /* border:1px solid green; */
 }
 .progressIndicator{
     --progressWidth:25;
@@ -169,4 +171,20 @@ nav{
     left:0;
     background-color: hsla(120, 100%, 25%, 0.4);
     height:100%;
+}
+.quiz-body.hide, .pallette-container.hide{
+    /* visibility:hidden; */
+    transform : scale(0);
+    transition: 200ms ease-in-out;
+}
+#showQuestionPalette{
+    /* background-color: hsla(0, 0%, 100%, 0.87);
+    color:blue; */
+    color:#333;
+    background-color: hsl(58, 82%, 56%);
+    width:40%;
+    height:10%;
+    border:none;
+    border-radius:8px;
+    font-size: 0.8rem;
 }
