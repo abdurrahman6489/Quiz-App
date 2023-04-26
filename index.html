@@ -1,49 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz App</title>
-    <link href="./style.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,300;0,400;0,500;1,300&display=swap"
-        rel="stylesheet">
-    <script  src="./app.js" defer></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link href="./style.css" rel="stylesheet" />
+    <script src="./app.js" defer></script>
     <!-- <script type="module" src="./utils.js" defer></script> -->
-</head>
+  </head>
 
-<body>
+  <body>
     <nav>
-        <div class="logo">The Quiz App</div>
-        <div class="scoreContainer">Score&nbsp;<span id="score">0</span></div>
-        <div class="timer"><div class="progressIndicator"></div>
-        <span id="hr">01 : </span><span id="min">20 : </span><span id="sec">30</span>
-
-        </div>
+      <div class="logo">The Quiz App</div>
+      <div class="scoreContainer">Score&nbsp;<span id="score">0</span></div>
+      <div class="timer">
+        <div class="progressIndicator"></div>
+        <span id="hr" class="timeContainer">01&nbsp;:</span
+        ><span id="min" class="timeContainer">&nbsp;20:</span
+        ><span id="sec" class="timeContainer">&nbsp;30</span>
+      </div>
     </nav>
     <div class="quiz-body">
-        <div class="question-pallette">
-            <button id="showQuestionPalette">Show Question Pallette</button>
-            <div class="pallette-container hide">
-            </div>
+      <div class="question-pallette">
+        <button id="showQuestionPalette">Show Question Pallette</button>
+        <div class="pallette-container hide"></div>
+      </div>
+      <div class="question-container">
+        <div class="question">Question 1</div>
+        <div class="answer-container">
+          <!-- <div id="A" class="option option-A correct">A.</div> -->
+          <button id="A-answer" class="answerBtn option-A">Ans</button>
+          <!-- <div id="B" class="option option-B wrong">B.</div> -->
+          <button id="B-answer" class="answerBtn option-B">Ans</button>
+          <!-- <div id="C" class="option option-C wrong">C.</div> -->
+          <button id="C-answer" class="answerBtn option-C">Ans</button>
+          <!-- <div id="D" class="option option-D wrong">D.</div> -->
+          <button id="D-answer" class="answerBtn option-D">Ans</button>
         </div>
-        <div class="question-container">
-            <div class="question">Question 1</div>
-            <div class="answer-container">
-                <!-- <div id="A" class="option option-A correct">A.</div> -->
-                <button id="A-answer" class="answerBtn option-A">Ans</button>
-                <!-- <div id="B" class="option option-B wrong">B.</div> -->
-                <button id="B-answer" class="answerBtn option-B">Ans</button>
-                <!-- <div id="C" class="option option-C wrong">C.</div> -->
-                <button id="C-answer" class="answerBtn option-C">Ans</button>
-                <!-- <div id="D" class="option option-D wrong">D.</div> -->
-                <button id="D-answer" class="answerBtn option-D">Ans</button>
-            </div>
+        <div class="startNextBtns">
+          <button id="previousBtn">
+            <span
+              ><i class="fa-solid fa-arrow-left"></i>&nbsp;Previous
+              Question</span
+            >
+          </button>
+          <button id="nextBtn">
+            Next Question&nbsp;<span
+              ><i class="fa-solid fa-arrow-right"></i
+            ></span>
+          </button>
         </div>
+      </div>
     </div>
-</body>
-
+  </body>
 </html>

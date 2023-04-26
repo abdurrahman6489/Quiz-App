@@ -1,7 +1,6 @@
-const questions = 
-[
-    {
-        question:`What's the output?
+const questions = [
+  {
+    question: `What's the output?
         <br />
         function sayHi() {
         <br />
@@ -17,14 +16,14 @@ const questions =
         <br />
         <br />
         sayHi();`,
-        option1:`Lydia and undefined`,
-        option2:`Lydia and ReferenceError`,
-        option3:`undefined and ReferenceError`,
-        option4:`ReferenceError and 21`,
-        correct:2
-    },
-    {
-        question:`What's the output?
+    option1: `Lydia and undefined`,
+    option2: `Lydia and ReferenceError`,
+    option3: `undefined and ReferenceError`,
+    option4: `ReferenceError and 21`,
+    correct: 2,
+  },
+  {
+    question: `What's the output?
         for (var i = 0; i < 3; i++) {
           setTimeout(() => console.log(i), 1);
         }
@@ -32,14 +31,14 @@ const questions =
         for (let i = 0; i < 3; i++) {
           setTimeout(() => console.log(i), 1);
         }`,
-        option1:`0 1 2 and 0 1 2`,
-        option2:`0 1 2 and 3 3 3`,
-        option3:`3 3 3 and 0 1 2`,
-        option4:`None of these`,
-        correct:2
-    },
-    {
-        question:`What's the output?
+    option1: `0 1 2 and 0 1 2`,
+    option2: `0 1 2 and 3 3 3`,
+    option3: `3 3 3 and 0 1 2`,
+    option4: `None of these`,
+    correct: 2,
+  },
+  {
+    question: `What's the output?
         const shape = {
           radius: 10,
           diameter() {
@@ -50,111 +49,208 @@ const questions =
         
         console.log(shape.diameter());
         console.log(shape.perimeter());`,
-        option1:`20 and 62.83185307179586`,
-        option2:`20 and NaN`,
-        option3:`20 and 63`,
-        option4:`NaN and 63`,
-        correct:1
-    }
+    option1: `20 and 62.83185307179586`,
+    option2: `20 and NaN`,
+    option3: `20 and 63`,
+    option4: `NaN and 63`,
+    correct: 1,
+  },
 ];
 let submittedAnswers = [];
 const palletteContainer = document.querySelector(".pallette-container");
 const answerBtns = document.querySelectorAll(".answerBtn");
 const showQuestionPalette = document.getElementById("showQuestionPalette");
+const scoreElement = document.getElementById("score");
+const timeContainer = document.querySelectorAll(".timeContainer");
+const progressIndicator = document.querySelector(".progressIndicator");
+const nextBtn = document.querySelector("#nextBtn");
+const prevBtn = document.querySelector("#previousBtn");
+const totalQuestions = 100;
+let setHour = 0;
+let setMin = 0;
+let setSec = 25;
+let remainingHour, remainingMin, remainingSec;
+let timeDuration = setHour * 3600 + setMin * 60 + setSec;
+let setTime, timer;
 
-let scoreElement = document.getElementById("score");
 let questionPalletteHidden = true;
-showQuestionPalette.addEventListener("click",(e)=>{
-    if(questionPalletteHidden){
-        palletteContainer.classList.remove("hide");
-        questionPalletteHidden = false;
-        e.currentTarget.innerHTML = "Hide Question Pallette";
-    }
-    else if(!questionPalletteHidden){
-        palletteContainer.classList.add("hide");
-        questionPalletteHidden = true;
-        e.currentTarget.innerHTML = "Show Question Pallette";
-    }
-})
 let currentQuestionSelected = 0;
 let score = 0;
-generateQuestionPallette(100);
-function generateQuestionPallette(numberOfQuestions){
-    for(i=1;i<=numberOfQuestions;i++){
-        const btn = document.createElement("button");
-        btn.type = "submit";
-        btn.classList.add("btn");
-        btn.innerHTML = i;
-        palletteContainer.appendChild(btn);
+generateQuestionPallette(totalQuestions);
+window.addEventListener("DOMContentLoaded", () => {
+  showCurrentQuestion(questions[0], currentQuestionSelected + 1);
+  const firstQuestion = document.querySelector(".btn");
+  firstQuestion.classList.add("active");
+});
+
+showQuestionPalette.addEventListener("click", (e) => {
+  if (questionPalletteHidden) {
+    palletteContainer.classList.remove("hide");
+    questionPalletteHidden = false;
+    e.currentTarget.innerHTML = "Hide Question Pallette";
+    e.currentTarget.style.backgroundColor = "green";
+    e.currentTarget.style.color = "white";
+  } else if (!questionPalletteHidden) {
+    palletteContainer.classList.add("hide");
+    questionPalletteHidden = true;
+    e.currentTarget.innerHTML = "Show Question Pallette";
+    e.currentTarget.style.backgroundColor = "hsl(58, 82%, 56%)";
+    e.currentTarget.style.color = "hsl(0, 0%, 20%)";
+  }
+});
+
+function generateQuestionPallette(numberOfQuestions) {
+  for (i = 1; i <= numberOfQuestions; i++) {
+    const btn = document.createElement("button");
+    btn.type = "submit";
+    btn.classList.add("btn");
+    btn.innerHTML = i;
+    palletteContainer.appendChild(btn);
+  }
+}
+
+function removeClass(buttons, classname) {
+  buttons.forEach((btn) => {
+    btn.classList.remove(classname);
+  });
+}
+function showCurrentQuestion(object, questionNo) {
+  try {
+    if (object === undefined) {
+      throw new Error("exceeded maximum question No");
     }
+    removeClass(questionButton, "active");
+    removeClass(answerBtns, "correct");
+    removeClass(answerBtns, "wrong");
+    const currentQuestion = document.querySelector(".question");
+    currentQuestion.innerHTML = `Question - ${questionNo} - ${object.question}`;
+    const option1 = document.querySelector("#A-answer");
+    const option2 = document.querySelector("#B-answer");
+    const option3 = document.querySelector("#C-answer");
+    const option4 = document.querySelector("#D-answer");
+    option1.innerHTML = object.option1;
+    option2.innerHTML = object.option2;
+    option3.innerHTML = object.option3;
+    option4.innerHTML = object.option4;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 const questionButton = document.querySelectorAll(".btn");
-function removeClass(buttons,classname){
-    buttons.forEach(btn=>{
-        btn.classList.remove(classname);
-    })
-}
-function showCurrentQuestion(object,questionNo){
-    try{
-        if(object===undefined){
-            throw new Error("exceeded maximum question No");
-        }
-        const currentQuestion = document.querySelector(".question");
-        currentQuestion.innerHTML = `Question - ${questionNo} - ${object.question}`;
-        const option1 = document.querySelector("#A-answer");
-        const option2 = document.querySelector("#B-answer");
-        const option3 = document.querySelector("#C-answer");
-        const option4 = document.querySelector("#D-answer");
-        option1.innerHTML = object.option1;
-        option2.innerHTML = object.option2;
-        option3.innerHTML = object.option3;
-        option4.innerHTML = object.option4;
+questionButton.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    const questionNumber = Number(e.currentTarget.innerHTML);
+    currentQuestionSelected = questionNumber - 1;
+    showCurrentQuestion(questions[questionNumber - 1], questionNumber);
+    e.currentTarget.classList.add("active");
+  });
+});
+answerBtns.forEach((answerBtn, index) => {
+  answerBtn.addEventListener("click", (e) => {
+    let correctAnsIndex = questions[currentQuestionSelected].correct;
+    if (
+      correctAnsIndex === index &&
+      !submittedAnswers.includes(currentQuestionSelected)
+    ) {
+      e.currentTarget.classList.add("correct");
+      scoreElement.innerHTML = parseInt(scoreElement.innerHTML) + 1;
+      score++;
+      console.log(score);
+    } else if (!submittedAnswers.includes(currentQuestionSelected)) {
+      e.currentTarget.classList.add("wrong");
+      answerBtns[correctAnsIndex].classList.add("correct");
     }
-    catch(error){
-        console.log(error.message);
-    }
+    submittedAnswers.push(currentQuestionSelected);
+  });
+});
+function makeRandomNumber(lowest, highest) {
+  return Math.floor(Math.random() * highest) + lowest;
 }
-questionButton.forEach(btn=>{
-    btn.addEventListener("click",(e)=>{
-        removeClass(questionButton,"active");
-        removeClass(answerBtns,"correct");
-        removeClass(answerBtns,"wrong");
-        const questionNumber = Number(e.currentTarget.innerHTML);
-        currentQuestionSelected = questionNumber -1;
-        e.currentTarget.classList.add("active");
-        showCurrentQuestion(questions[questionNumber-1], questionNumber);
-    })
-})
-answerBtns.forEach((answerBtn,index)=>{
-    answerBtn.addEventListener("click",(e)=>{
-        let correctAnsIndex = questions[currentQuestionSelected].correct 
-        if(correctAnsIndex === index && !submittedAnswers.includes(currentQuestionSelected)){
-            e.currentTarget.classList.add("correct");
-            scoreElement.innerHTML = parseInt(scoreElement.innerHTML) + 1;
-            score++;
-            console.log(score);
-        }
-        else if(!submittedAnswers.includes(currentQuestionSelected)){
-            e.currentTarget.classList.add("wrong");
-            answerBtns[correctAnsIndex].classList.add("correct");
-        }
-        submittedAnswers.push(currentQuestionSelected);
-    })
-})
-function makeRandomNumber(lowest,highest){
-    return Math.floor(Math.random()*highest) + lowest;
-}
-function makeRandomIndexArray(array){
-    while(array.length<100){
-        let number = makeRandomNumber(1,100);
-        if(!array.includes(number)) array.push(number);
-    }
-    return array;
+function makeRandomIndexArray(array) {
+  while (array.length < 100) {
+    let number = makeRandomNumber(1, 100);
+    if (!array.includes(number)) array.push(number);
+  }
+  return array;
 }
 let indexArray = [];
 indexArray = makeRandomIndexArray(indexArray);
+timerStart();
+function timerStart() {
+  setTime = Date.now() + timeDuration * 1000;
+  timer = setInterval(() => {
+    countDownTime();
+  }, 1000);
+}
+function reset() {
+  timerStop();
+}
 
+function countDownTime() {
+  let currentTime = Date.now();
+  let remainingTime = setTime - currentTime;
+  if (remainingTime > 0) {
+    remainingHour = Math.floor(remainingTime / 3600000);
+    remainingMin = Math.floor(remainingTime / 60000) - remainingHour * 60;
+    remainingSec = Math.floor(remainingTime / 1000) % 60;
+    timeContainer[0].innerHTML =
+      9 - remainingHour >= 0
+        ? `0${remainingHour}&nbsp;:`
+        : `${remainingHour}&nbsp;:`;
+    timeContainer[1].innerHTML =
+      9 - remainingMin >= 0
+        ? `&nbsp;0${remainingMin}&nbsp;:`
+        : `&nbsp;${remainingMin}&nbsp;:`;
+    timeContainer[2].innerHTML =
+      9 - remainingSec >= 0
+        ? `&nbsp;0${remainingSec}`
+        : `&nbsp;${remainingSec}`;
+    let progressIndicatorWidth = 1 - remainingTime / (timeDuration * 1000);
+    setProgressIndicatorWidth(progressIndicatorWidth.toFixed(2));
+  } else {
+    reset();
+  }
+}
+function timerStop() {
+  clearInterval(timer);
+  timeContainer[0].innerHTML = `00&nbsp;:`;
+  timeContainer[1].innerHTML = `&nbsp;00&nbsp;:`;
+  timeContainer[2].innerHTML = `&nbsp;00`;
+  setProgressIndicatorWidth(0);
+}
 
+// setProgressIndicatorWidth(15);
+function setProgressIndicatorWidth(currentWidth) {
+  progressIndicator.style.setProperty("--progressWidth", currentWidth * 25);
+  let selectedColor;
+  if (currentWidth >= 0.9) selectedColor = "hsla(0, 100%, 50%, 0.4)";
+  else if (currentWidth >= 0.8) selectedColor = "hsla(39, 100%, 50%, 0.4)";
 
-
-
+  progressIndicator.style.backgroundColor = selectedColor;
+}
+nextBtn.addEventListener("click", changeQuestion);
+prevBtn.addEventListener("click", changeQuestion);
+function changeQuestion(event) {
+  console.log(event.currentTarget.id);
+  if (
+    event.currentTarget.id === "nextBtn" &&
+    currentQuestionSelected < totalQuestions - 1
+  ) {
+    currentQuestionSelected++; //nextBtn is clicked => go to next question
+    console.log("nextBtn is clicked");
+  } else if (
+    event.currentTarget.id === "previousBtn" &&
+    currentQuestionSelected > 0
+  ) {
+    currentQuestionSelected--; //previousBtn is clicked => go to previous question
+    console.log("prev btn is clicked");
+  } else {
+    console.log("returned");
+    return;
+  }
+  showCurrentQuestion(
+    questions[currentQuestionSelected],
+    currentQuestionSelected + 1
+  );
+  questionButton[currentQuestionSelected].classList.add("active");
+}
