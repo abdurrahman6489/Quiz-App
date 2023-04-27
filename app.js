@@ -67,17 +67,14 @@ const timeContainer = document.querySelectorAll(".timeContainer");
 const progressIndicator = document.querySelector(".progressIndicator");
 const nextBtn = document.querySelector("#nextBtn");
 const prevBtn = document.querySelector("#previousBtn");
+const totalScoreElem = document.querySelector(".totalScore");
 let inputs = document.querySelectorAll(".input");
 const startBtn = document.querySelector("#start");
 let questionButton = document.querySelectorAll(".btn");
-let totalQuestions = 5;
-let setHour = 0;
-let setMin = 0;
-let setSec = 25;
-let remainingHour, remainingMin, remainingSec;
-let timeDuration = setHour * 3600 + setMin * 60 + setSec;
-let setTime, timer;
 
+let totalQuestions = 5;
+let remainingHour, remainingMin, remainingSec;
+let setTime, timer;
 let questionPalletteHidden = true;
 let currentQuestionSelected = 0;
 let score = 0;
@@ -89,20 +86,22 @@ inputs.forEach((input) => {
 startBtn.addEventListener("click", (event) => {
   event.preventDefault();
   inputs = document.querySelectorAll(".input");
-  setHour = inputs[0].value ? parseInt(inputs[0].value) : 0;
-  setMin = inputs[1].value ? parseInt(inputs[1].value) : 0;
-  setSec = inputs[2].value ? parseInt(inputs[2].value) : 59;
+  let setHour = inputs[0].value ? parseInt(inputs[0].value) : 0;
+  let setMin = inputs[1].value ? parseInt(inputs[1].value) : 0;
+  let setSec = inputs[2].value ? parseInt(inputs[2].value) : 59;
   totalQuestions = inputs[3].value ? parseInt(inputs[3].value) : 5;
   startQuizModal.classList.add("hide");
   quizContainer.classList.remove("hide");
   generateQuestionPallette(totalQuestions);
   showFirstQuestionAtStart();
   questionButton = document.querySelectorAll(".btn");
-  timerStart();
+  addEventListenertoQuestionsBtns(questionButton);
+  timerStart(setHour, setMin, setSec);
   console.log(questionButton);
 });
 
 function generateQuestionPallette(numberOfQuestions) {
+  palletteContainer.innerHTML = "";
   for (i = 1; i <= numberOfQuestions; i++) {
     const btn = document.createElement("button");
     btn.type = "submit";
@@ -160,15 +159,17 @@ function showCurrentQuestion(object, questionNo) {
     console.log(error.message);
   }
 }
-
-questionButton.forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    const questionNumber = Number(e.currentTarget.innerHTML);
-    currentQuestionSelected = questionNumber - 1;
-    showCurrentQuestion(questions[questionNumber - 1], questionNumber);
-    e.currentTarget.classList.add("active");
+function addEventListenertoQuestionsBtns(btns) {
+  btns.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const questionNumber = Number(e.currentTarget.innerHTML);
+      currentQuestionSelected = questionNumber - 1;
+      showCurrentQuestion(questions[questionNumber - 1], questionNumber);
+      e.currentTarget.classList.add("active");
+    });
   });
-});
+}
+
 answerBtns.forEach((answerBtn, index) => {
   answerBtn.addEventListener("click", (e) => {
     let correctAnsIndex = questions[currentQuestionSelected].correct;
@@ -199,7 +200,8 @@ function makeRandomIndexArray(array) {
 }
 let indexArray = [];
 indexArray = makeRandomIndexArray(indexArray);
-function timerStart() {
+function timerStart(setHour, setMin, setSec) {
+  let timeDuration = setHour * 3600 + setMin * 60 + setSec;
   setTime = Date.now() + timeDuration * 1000;
   timer = setInterval(() => {
     countDownTime();
@@ -212,9 +214,11 @@ function reset() {
   quizContainer.classList.add("hide");
   startQuizModal.classList.remove("hide");
   inputs.forEach((input) => (input.value = 0));
+  showScore(score);
   scoreElement.innerHTML = "0";
   score = 0;
   currentQuestionSelected = 0;
+  submittedAnswers.length = 0;
 }
 
 function countDownTime() {
@@ -281,4 +285,8 @@ function changeQuestion(event) {
     currentQuestionSelected + 1
   );
   questionButton[currentQuestionSelected].classList.add("active");
+}
+function showScore(score) {
+  totalScoreElem.classList.remove("hide");
+  totalScoreElem.innerHTML = `Your score is ${score}`;
 }
