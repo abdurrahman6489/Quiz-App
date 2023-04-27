@@ -57,6 +57,8 @@ const questions = [
   },
 ];
 let submittedAnswers = [];
+const quizContainer = document.querySelector(".quiz-body");
+const startQuizModal = document.querySelector(".startQuiz");
 const palletteContainer = document.querySelector(".pallette-container");
 const answerBtns = document.querySelectorAll(".answerBtn");
 const showQuestionPalette = document.getElementById("showQuestionPalette");
@@ -65,7 +67,10 @@ const timeContainer = document.querySelectorAll(".timeContainer");
 const progressIndicator = document.querySelector(".progressIndicator");
 const nextBtn = document.querySelector("#nextBtn");
 const prevBtn = document.querySelector("#previousBtn");
-const totalQuestions = 100;
+let inputs = document.querySelectorAll(".input");
+const startBtn = document.querySelector("#start");
+let questionButton = document.querySelectorAll(".btn");
+let totalQuestions = 5;
 let setHour = 0;
 let setMin = 0;
 let setSec = 25;
@@ -76,12 +81,41 @@ let setTime, timer;
 let questionPalletteHidden = true;
 let currentQuestionSelected = 0;
 let score = 0;
-generateQuestionPallette(totalQuestions);
-window.addEventListener("DOMContentLoaded", () => {
+inputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    showTimeinTimer(inputs[0].value, inputs[1].value, inputs[2].value);
+  });
+});
+startBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  inputs = document.querySelectorAll(".input");
+  setHour = inputs[0].value ? parseInt(inputs[0].value) : 0;
+  setMin = inputs[1].value ? parseInt(inputs[1].value) : 0;
+  setSec = inputs[2].value ? parseInt(inputs[2].value) : 59;
+  totalQuestions = inputs[3].value ? parseInt(inputs[3].value) : 5;
+  startQuizModal.classList.add("hide");
+  quizContainer.classList.remove("hide");
+  generateQuestionPallette(totalQuestions);
+  showFirstQuestionAtStart();
+  questionButton = document.querySelectorAll(".btn");
+  timerStart();
+  console.log(questionButton);
+});
+
+function generateQuestionPallette(numberOfQuestions) {
+  for (i = 1; i <= numberOfQuestions; i++) {
+    const btn = document.createElement("button");
+    btn.type = "submit";
+    btn.classList.add("btn");
+    btn.innerHTML = i;
+    palletteContainer.appendChild(btn);
+  }
+}
+function showFirstQuestionAtStart() {
   showCurrentQuestion(questions[0], currentQuestionSelected + 1);
   const firstQuestion = document.querySelector(".btn");
   firstQuestion.classList.add("active");
-});
+}
 
 showQuestionPalette.addEventListener("click", (e) => {
   if (questionPalletteHidden) {
@@ -98,16 +132,6 @@ showQuestionPalette.addEventListener("click", (e) => {
     e.currentTarget.style.color = "hsl(0, 0%, 20%)";
   }
 });
-
-function generateQuestionPallette(numberOfQuestions) {
-  for (i = 1; i <= numberOfQuestions; i++) {
-    const btn = document.createElement("button");
-    btn.type = "submit";
-    btn.classList.add("btn");
-    btn.innerHTML = i;
-    palletteContainer.appendChild(btn);
-  }
-}
 
 function removeClass(buttons, classname) {
   buttons.forEach((btn) => {
@@ -136,7 +160,7 @@ function showCurrentQuestion(object, questionNo) {
     console.log(error.message);
   }
 }
-const questionButton = document.querySelectorAll(".btn");
+
 questionButton.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     const questionNumber = Number(e.currentTarget.innerHTML);
@@ -175,7 +199,6 @@ function makeRandomIndexArray(array) {
 }
 let indexArray = [];
 indexArray = makeRandomIndexArray(indexArray);
-timerStart();
 function timerStart() {
   setTime = Date.now() + timeDuration * 1000;
   timer = setInterval(() => {
@@ -183,7 +206,15 @@ function timerStart() {
   }, 1000);
 }
 function reset() {
-  timerStop();
+  clearInterval(timer);
+  showTimeinTimer(0, 0, 0);
+  setProgressIndicatorWidth(0);
+  quizContainer.classList.add("hide");
+  startQuizModal.classList.remove("hide");
+  inputs.forEach((input) => (input.value = 0));
+  scoreElement.innerHTML = "0";
+  score = 0;
+  currentQuestionSelected = 0;
 }
 
 function countDownTime() {
@@ -193,36 +224,33 @@ function countDownTime() {
     remainingHour = Math.floor(remainingTime / 3600000);
     remainingMin = Math.floor(remainingTime / 60000) - remainingHour * 60;
     remainingSec = Math.floor(remainingTime / 1000) % 60;
-    timeContainer[0].innerHTML =
-      9 - remainingHour >= 0
-        ? `0${remainingHour}&nbsp;:`
-        : `${remainingHour}&nbsp;:`;
-    timeContainer[1].innerHTML =
-      9 - remainingMin >= 0
-        ? `&nbsp;0${remainingMin}&nbsp;:`
-        : `&nbsp;${remainingMin}&nbsp;:`;
-    timeContainer[2].innerHTML =
-      9 - remainingSec >= 0
-        ? `&nbsp;0${remainingSec}`
-        : `&nbsp;${remainingSec}`;
+    showTimeinTimer(remainingHour, remainingMin, remainingSec);
     let progressIndicatorWidth = 1 - remainingTime / (timeDuration * 1000);
     setProgressIndicatorWidth(progressIndicatorWidth.toFixed(2));
   } else {
-    reset();
+    timerStop();
   }
 }
 function timerStop() {
-  clearInterval(timer);
-  timeContainer[0].innerHTML = `00&nbsp;:`;
-  timeContainer[1].innerHTML = `&nbsp;00&nbsp;:`;
-  timeContainer[2].innerHTML = `&nbsp;00`;
-  setProgressIndicatorWidth(0);
+  reset();
 }
 
-// setProgressIndicatorWidth(15);
+function showTimeinTimer(remainingHour, remainingMin, remainingSec) {
+  timeContainer[0].innerHTML =
+    9 - remainingHour >= 0
+      ? `0${remainingHour}&nbsp;:`
+      : `${remainingHour}&nbsp;:`;
+  timeContainer[1].innerHTML =
+    9 - remainingMin >= 0
+      ? `&nbsp;0${remainingMin}&nbsp;:`
+      : `&nbsp;${remainingMin}&nbsp;:`;
+  timeContainer[2].innerHTML =
+    9 - remainingSec >= 0 ? `&nbsp;0${remainingSec}` : `&nbsp;${remainingSec}`;
+}
+
 function setProgressIndicatorWidth(currentWidth) {
   progressIndicator.style.setProperty("--progressWidth", currentWidth * 25);
-  let selectedColor;
+  let selectedColor = "hsla(120, 100%, 25%, 0.4)";
   if (currentWidth >= 0.9) selectedColor = "hsla(0, 100%, 50%, 0.4)";
   else if (currentWidth >= 0.8) selectedColor = "hsla(39, 100%, 50%, 0.4)";
 
