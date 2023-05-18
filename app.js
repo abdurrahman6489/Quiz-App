@@ -188,37 +188,13 @@ answerBtns.forEach((answerBtn, index) => {
     submittedAnswers.push(currentQuestionSelected);
   });
 });
-function makeRandomNumber(lowest, highest) {
-  return Math.floor(Math.random() * highest) + lowest;
-}
-function makeRandomIndexArray(array) {
-  while (array.length < 100) {
-    let number = makeRandomNumber(1, 100);
-    if (!array.includes(number)) array.push(number);
-  }
-  return array;
-}
-let indexArray = [];
-indexArray = makeRandomIndexArray(indexArray);
+
 function timerStart(setHour, setMin, setSec) {
   let timeDuration = setHour * 3600 + setMin * 60 + setSec;
   setTime = Date.now() + timeDuration * 1000;
   timer = setInterval(() => {
     countDownTime(timeDuration);
   }, 1000);
-}
-function reset() {
-  clearInterval(timer);
-  showTimeinTimer(0, 0, 0);
-  setProgressIndicatorWidth(0);
-  quizContainer.classList.add("hide");
-  startQuizModal.classList.remove("hide");
-  inputs.forEach((input) => (input.value = 0));
-  showScore(score);
-  scoreElement.innerHTML = "0";
-  score = 0;
-  currentQuestionSelected = 0;
-  submittedAnswers.length = 0;
 }
 
 function countDownTime(timeDuration) {
@@ -235,9 +211,6 @@ function countDownTime(timeDuration) {
     timerStop();
   }
 }
-function timerStop() {
-  reset();
-}
 
 function showTimeinTimer(remainingHour, remainingMin, remainingSec) {
   timeContainer[0].innerHTML =
@@ -250,6 +223,24 @@ function showTimeinTimer(remainingHour, remainingMin, remainingSec) {
       : `&nbsp;${remainingMin}&nbsp;:`;
   timeContainer[2].innerHTML =
     9 - remainingSec >= 0 ? `&nbsp;0${remainingSec}` : `&nbsp;${remainingSec}`;
+}
+
+function timerStop() {
+  reset();
+}
+
+function reset() {
+  clearInterval(timer);
+  showTimeinTimer(0, 0, 0);
+  setProgressIndicatorWidth(0);
+  quizContainer.classList.add("hide");
+  startQuizModal.classList.remove("hide");
+  inputs.forEach((input) => (input.value = 0));
+  showScore(score);
+  scoreElement.innerHTML = "0";
+  score = 0;
+  currentQuestionSelected = 0;
+  submittedAnswers.length = 0;
 }
 
 function setProgressIndicatorWidth(currentWidth) {
@@ -290,3 +281,16 @@ function showScore(score) {
   totalScoreElem.classList.remove("hide");
   totalScoreElem.innerHTML = `Your score is ${score}`;
 }
+
+function makeRandomNumber(lowest, highest) {
+  return Math.floor(Math.random() * highest) + lowest;
+}
+function makeRandomIndexArray(array) {
+  while (array.length < 100) {
+    let number = makeRandomNumber(1, 100);
+    if (!array.includes(number)) array.push(number);
+  }
+  return array;
+}
+let indexArray = [];
+indexArray = makeRandomIndexArray(indexArray);
