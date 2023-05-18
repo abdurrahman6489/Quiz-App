@@ -204,7 +204,7 @@ function timerStart(setHour, setMin, setSec) {
   let timeDuration = setHour * 3600 + setMin * 60 + setSec;
   setTime = Date.now() + timeDuration * 1000;
   timer = setInterval(() => {
-    countDownTime();
+    countDownTime(timeDuration);
   }, 1000);
 }
 function reset() {
@@ -221,7 +221,7 @@ function reset() {
   submittedAnswers.length = 0;
 }
 
-function countDownTime() {
+function countDownTime(timeDuration) {
   let currentTime = Date.now();
   let remainingTime = setTime - currentTime;
   if (remainingTime > 0) {
